@@ -63,6 +63,21 @@ static void on_reshape(int width, int height)
 
 static void on_display(void)
 {
+    // Position and parameters of light source
+    GLfloat light_position[] = { 5, 7, 5, 0 };
+    GLfloat light_ambient[] = { 0.3, 0.3, 0.3, 1 };
+    GLfloat light_diffuse[] = { 0.7, 0.7, 0.7, 1 };
+    GLfloat light_specular[] = { 0.7, 0.7, 0.7, 1 };
+
+    GLfloat ambient_coeffs[] = { 0.2, 0.2, 0.2, 1 };
+    GLfloat diffuse_coeffs[] = { 0.3, 0.3, 0.3, 1 };
+    GLfloat specular_coeffs[] = { 0.7, 0.7, 0.7, 1 };
+    GLfloat shininess = 20;
+
+    GLfloat ambient_coeffs_player[] = { 0.2, 0.2, 0.9, 1 };
+    GLfloat diffuse_coeffs_player[] = { 0.5, 0.5, 0.5, 1 };
+    GLfloat specular_coeffs_player[] = { 0.7, 0.7, 0.7, 1 };
+
     // Clearing buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -73,6 +88,17 @@ static void on_display(void)
               px-3, 0.5, pz-3,
               0, 1, 0);
 
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+    glDisable(GL_LIGHTING);
     // Floor
     glColor3f(0.55, 0.09, 0.09);
     glBegin(GL_POLYGON);
@@ -82,12 +108,25 @@ static void on_display(void)
         glVertex3f(50, 0, -50);
     glEnd();
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
     //Drawing initial block
     glPushMatrix();
       glTranslatef(px, 2.5, pz);
-      glColor3f(0.2, 0.2, 0.2);
+      glColor3f(1, 0, 0);
       glutSolidCube(5);
     glPopMatrix();
+
+    glPushMatrix();
+      glTranslatef(px, 2.5, pz);
+      glColor3f(1, 0, 0);
+      glutSolidCube(5);
+    glPopMatrix();
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs_player);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs_player);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs_player);
 
     // Drawing player on the block
     glPushMatrix();
